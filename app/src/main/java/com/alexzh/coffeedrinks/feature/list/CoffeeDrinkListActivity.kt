@@ -34,6 +34,7 @@ class CoffeeDrinkListActivity : AppCompatActivity() {
 
         // TODO: item_list == recyclerView
         val adapter = CoffeeDrinksAdapter(
+            twoPane,
             { coffeeDrinkUiModel ->
                 if (twoPane) {
                     val fragment = CoffeeDrinkDetailFragment().apply {
@@ -52,8 +53,8 @@ class CoffeeDrinkListActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
             },
-            {favouriteItemClick ->
-                // TODO: implement changing favourite state
+            { coffeeDrinkUiModel ->
+                viewModel.updateFavouriteState(coffeeDrinkUiModel)
             }
         )
         recyclerView.adapter = adapter

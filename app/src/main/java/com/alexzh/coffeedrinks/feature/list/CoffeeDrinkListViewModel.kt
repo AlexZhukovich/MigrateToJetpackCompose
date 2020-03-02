@@ -18,4 +18,19 @@ class CoffeeDrinkListViewModel(
     fun loadCoffeeDrinks() {
         coffeeDrinks.value = mapper.map(repository.getCoffeeDrinks())
     }
+
+    fun updateFavouriteState(coffeeDrink: CoffeeDrinkUiModel) {
+        val result = repository.updateFavouriteState(
+            coffeeDrink.id,
+            coffeeDrink.isFavourite.not()
+        )
+        if (result) {
+            coffeeDrinks.value = coffeeDrinks.value?.map {
+                if (it.id == coffeeDrink.id) {
+                    coffeeDrink.copy(isFavourite = coffeeDrink.isFavourite.not())
+                }
+                else it
+            }
+        }
+    }
 }

@@ -55,7 +55,7 @@ class CoffeeDrinkDetailFragment : Fragment() {
         }
 
         rootView.favourite_fab.setOnClickListener {
-            // TODO: implement changing favourite state
+            viewModel.updateFavouriteState()
         }
         return rootView
     }

@@ -8,5 +8,5 @@ interface CoffeeDrinksRepository {
 
     fun getCoffeeDrinkById(id: Long): CoffeeDrink?
 
-    fun updateFavouriteState(coffeeDrink: CoffeeDrink, newFavouriteState: Boolean): Boolean
+    fun updateFavouriteState(id: Long, newFavouriteState: Boolean): Boolean
 }

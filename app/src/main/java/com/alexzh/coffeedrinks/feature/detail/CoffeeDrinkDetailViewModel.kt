@@ -19,4 +19,14 @@ class CoffeeDrinkDetailViewModel(
     fun loadCoffeeDrink(id: Long) {
         coffeeDrink.value = repository.getCoffeeDrinkById(id)?.let { mapper.map(it) }
     }
+
+    fun updateFavouriteState() {
+        val result = repository.updateFavouriteState(
+            coffeeDrink.value?.id ?: -1,
+            coffeeDrink.value?.isFavourite?.not() ?: false
+        )
+        if (result) {
+            coffeeDrink.value = coffeeDrink.value?.isFavourite?.not()?.let { coffeeDrink.value?.copy(isFavourite = it) }
+        }
+    }
 }

@@ -17,10 +17,10 @@ class RuntimeCoffeeDrinkRepository : CoffeeDrinksRepository {
 
     // TODO: add delay
     override fun updateFavouriteState(
-        coffeeDrink: CoffeeDrink,
+        id: Long,
         newFavouriteState: Boolean
     ): Boolean {
-        val index = coffeeDrinks.indexOf(coffeeDrink)
+        val index = coffeeDrinks.indexOfFirst { it.id == id }
         if (index >= 0 && index < coffeeDrinks.size) {
             coffeeDrinks[index] = coffeeDrinks[index].copy(isFavourite = newFavouriteState)
             return true
