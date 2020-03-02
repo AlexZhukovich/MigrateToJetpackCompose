@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.alexzh.coffeedrinks.R
 import com.alexzh.coffeedrinks.feature.detail.CoffeeDrinkDetailActivity
 import com.alexzh.coffeedrinks.feature.detail.CoffeeDrinkDetailFragment
@@ -55,7 +56,10 @@ class CoffeeDrinkListActivity : AppCompatActivity() {
                 // TODO: implement changing favourite state
             }
         )
-        item_list.adapter = adapter
+        recyclerView.adapter = adapter
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
+        )
 
         viewModel.getCoffeeDrinks().observe(this, Observer {
             adapter.setCoffeeDrinks(it)

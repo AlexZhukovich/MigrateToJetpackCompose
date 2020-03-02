@@ -61,6 +61,8 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/item_detail_container"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/stat_notify_chat" />
+        android:backgroundTint="@color/colorAccentPink"
+        android:tint="@color/colorAccent"
+        tools:srcCompat="@android:drawable/stat_notify_chat" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

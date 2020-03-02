@@ -23,7 +23,7 @@ class CoffeeDrinkDetailFragment : Fragment() {
 
         (activity as AppCompatActivity).setSupportActionBar(rootView.detail_toolbar)
 
-        if (requireActivity().findViewById<View>(R.id.item_list) == null) {
+        if (requireActivity().findViewById<View>(R.id.recyclerView) == null) {
             (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
 
