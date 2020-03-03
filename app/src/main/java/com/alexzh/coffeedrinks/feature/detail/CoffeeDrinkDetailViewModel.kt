@@ -26,7 +26,10 @@ class CoffeeDrinkDetailViewModel(
             coffeeDrink.value?.isFavourite?.not() ?: false
         )
         if (result) {
-            coffeeDrink.value = coffeeDrink.value?.isFavourite?.not()?.let { coffeeDrink.value?.copy(isFavourite = it) }
+            val oldValue = coffeeDrink.value?.isFavourite
+            oldValue?.let {
+                coffeeDrink.value = coffeeDrink.value?.copy(isFavourite = it.not())
+            }
         }
     }
 }
