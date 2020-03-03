@@ -2,19 +2,22 @@ package com.alexzh.coffeedrinks.feature.list
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.alexzh.coffeedrinks.R
 import com.alexzh.coffeedrinks.feature.detail.CoffeeDrinkDetailActivity
 import com.alexzh.coffeedrinks.feature.detail.CoffeeDrinkDetailFragment
+import com.alexzh.coffeedrinks.feature.list.model.CardType
 import com.alexzh.coffeedrinks.feature.list.model.CoffeeDrinkUiModel
 import kotlinx.android.synthetic.main.activity_coffee_drinks_list.*
 import kotlinx.android.synthetic.main.item_list.*
 import org.koin.android.ext.android.inject
 
 class CoffeeDrinkListActivity : AppCompatActivity() {
-
+    private var cardType: CardType = CardType.DEFAULT_CARD
     private val viewModel: CoffeeDrinkListViewModel by inject()
     private val adapter: CoffeeDrinksAdapter by lazy {
         CoffeeDrinksAdapter(
@@ -22,6 +25,9 @@ class CoffeeDrinkListActivity : AppCompatActivity() {
             ::onCoffeeDrinkClicked,
             ::onCoffeeDrinkFavouriteClicked
         )
+    }
+    val itemDecoration: DividerItemDecoration by lazy {
+        DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
     }
     private var isTabletMode: Boolean = false
 
@@ -42,11 +48,34 @@ class CoffeeDrinkListActivity : AppCompatActivity() {
         viewModel.loadCoffeeDrinks()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (!isTabletMode) {
+            menuInflater.inflate(R.menu.phone_list_menu, menu)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_change_card_type) {
+            cardType = if (cardType == CardType.DEFAULT_CARD) {
+                CardType.EXTENDED_CARD
+            } else {
+                CardType.DEFAULT_CARD
+            }
+            setUpCoffeeDrinkList()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun setUpCoffeeDrinkList() {
+        adapter.setCardType(cardType)
         recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(recyclerView.context, DividerItemDecoration.VERTICAL)
-        )
+
+        if (cardType == CardType.DEFAULT_CARD) {
+            recyclerView.addItemDecoration(itemDecoration)
+        } else {
+            recyclerView.removeItemDecoration(itemDecoration)
+        }
     }
 
     private fun showCoffeeDrinks(coffeeDrinks: List<CoffeeDrinkUiModel>) {

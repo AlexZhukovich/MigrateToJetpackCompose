@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.alexzh.coffeedrinks.R
+import com.alexzh.coffeedrinks.feature.list.model.CardType
 import com.alexzh.coffeedrinks.feature.list.model.CoffeeDrinkUiModel
 import kotlinx.android.synthetic.main.item_coffee_drink.view.*
 
@@ -15,6 +16,7 @@ class CoffeeDrinksAdapter(
     private val favouriteItemClick: (CoffeeDrinkUiModel) -> Unit
 ) : RecyclerView.Adapter<CoffeeDrinksAdapter.CoffeeDrinksViewHolder>() {
     private val coffeeDrinks = mutableListOf<CoffeeDrinkUiModel>()
+    private var cardType: CardType = CardType.DEFAULT_CARD
 
     fun setCoffeeDrinks(coffeeDrinks: List<CoffeeDrinkUiModel>) {
         this.coffeeDrinks.clear()
@@ -22,9 +24,18 @@ class CoffeeDrinksAdapter(
         notifyDataSetChanged()
     }
 
+    fun setCardType(cardType: CardType) {
+        this.cardType = cardType
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoffeeDrinksViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_coffee_drink, parent, false)
-        return CoffeeDrinksViewHolder(view, isTablet, itemClick, favouriteItemClick)
+        val view = if (cardType == CardType.DEFAULT_CARD) {
+            LayoutInflater.from(parent.context).inflate(R.layout.item_coffee_drink, parent, false)
+        } else {
+            LayoutInflater.from(parent.context).inflate(R.layout.item_coffee_drink_extended, parent, false)
+        }
+        return CoffeeDrinksViewHolder(view, cardType, isTablet, itemClick, favouriteItemClick)
     }
 
     override fun onBindViewHolder(holder: CoffeeDrinksViewHolder, position: Int) {
@@ -35,6 +46,7 @@ class CoffeeDrinksAdapter(
 
     class CoffeeDrinksViewHolder(
         view: View,
+        private val cardType: CardType,
         private val isTablet: Boolean,
         val itemClick: (CoffeeDrinkUiModel) -> Unit,
         val favouriteClick: ((CoffeeDrinkUiModel) -> Unit)
@@ -44,7 +56,11 @@ class CoffeeDrinksAdapter(
             with (coffeeDrink) {
                 itemView.logo.setImageResource(imageRes)
                 itemView.title.text = name
-                itemView.ingredients.text = ingredients
+                itemView.additional.text = if (cardType == CardType.DEFAULT_CARD) {
+                    ingredients
+                } else {
+                    description
+                }
 
                 if (isTablet) {
                     itemView.favourite.visibility = View.GONE
