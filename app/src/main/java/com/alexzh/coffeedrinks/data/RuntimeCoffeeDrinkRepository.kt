@@ -2,24 +2,26 @@ package com.alexzh.coffeedrinks.data
 
 import com.alexzh.coffeedrinks.R
 import com.alexzh.coffeedrinks.data.model.CoffeeDrink
+import kotlinx.coroutines.delay
 
 class RuntimeCoffeeDrinkRepository : CoffeeDrinksRepository {
     private val coffeeDrinks: MutableList<CoffeeDrink> = initCoffeeDrinks()
 
-    // TODO: add delay
-    override fun getCoffeeDrinks(): List<CoffeeDrink> {
+    override suspend fun getCoffeeDrinks(): List<CoffeeDrink> {
+        delay(1_000)
         return coffeeDrinks
     }
 
-    override fun getCoffeeDrinkById(id: Long): CoffeeDrink? {
+    override suspend fun getCoffeeDrinkById(id: Long): CoffeeDrink? {
+        delay(1_000)
         return coffeeDrinks.firstOrNull { it.id == id }
     }
 
-    // TODO: add delay
-    override fun updateFavouriteState(
+    override suspend fun updateFavouriteState(
         id: Long,
         newFavouriteState: Boolean
     ): Boolean {
+        delay(500)
         val index = coffeeDrinks.indexOfFirst { it.id == id }
         if (index >= 0 && index < coffeeDrinks.size) {
             coffeeDrinks[index] = coffeeDrinks[index].copy(isFavourite = newFavouriteState)

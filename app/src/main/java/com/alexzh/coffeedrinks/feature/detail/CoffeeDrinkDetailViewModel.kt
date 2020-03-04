@@ -3,9 +3,11 @@ package com.alexzh.coffeedrinks.feature.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.alexzh.coffeedrinks.data.CoffeeDrinksRepository
 import com.alexzh.coffeedrinks.feature.detail.mapper.CoffeeDrinkDetailUiModelMapper
 import com.alexzh.coffeedrinks.feature.detail.model.CoffeeDrinkDetailUiModel
+import kotlinx.coroutines.launch
 
 class CoffeeDrinkDetailViewModel(
     private val repository: CoffeeDrinksRepository,
@@ -17,18 +19,22 @@ class CoffeeDrinkDetailViewModel(
 
     // TODO: add error handling
     fun loadCoffeeDrink(id: Long) {
-        coffeeDrink.value = repository.getCoffeeDrinkById(id)?.let { mapper.map(it) }
+        viewModelScope.launch {
+            coffeeDrink.value = repository.getCoffeeDrinkById(id)?.let { mapper.map(it) }
+        }
     }
 
     fun updateFavouriteState() {
-        val result = repository.updateFavouriteState(
-            coffeeDrink.value?.id ?: -1,
-            coffeeDrink.value?.isFavourite?.not() ?: false
-        )
-        if (result) {
-            val oldValue = coffeeDrink.value?.isFavourite
-            oldValue?.let {
-                coffeeDrink.value = coffeeDrink.value?.copy(isFavourite = it.not())
+        viewModelScope.launch {
+            val result = repository.updateFavouriteState(
+                coffeeDrink.value?.id ?: -1,
+                coffeeDrink.value?.isFavourite?.not() ?: false
+            )
+            if (result) {
+                val oldValue = coffeeDrink.value?.isFavourite
+                oldValue?.let {
+                    coffeeDrink.value = coffeeDrink.value?.copy(isFavourite = it.not())
+                }
             }
         }
     }
