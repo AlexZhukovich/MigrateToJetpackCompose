@@ -3,6 +3,7 @@ package com.alexzh.coffeedrinks.feature.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.alexzh.coffeedrinks.R
 import com.alexzh.coffeedrinks.feature.list.model.CardType
@@ -19,9 +20,12 @@ class CoffeeDrinksAdapter(
     private var cardType: CardType = CardType.DEFAULT_CARD
 
     fun setCoffeeDrinks(coffeeDrinks: List<CoffeeDrinkUiModel>) {
+        val diffResult = DiffUtil.calculateDiff(
+            CoffeeDrinksCallback(this.coffeeDrinks, coffeeDrinks)
+        )
         this.coffeeDrinks.clear()
         this.coffeeDrinks.addAll(coffeeDrinks)
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun setCardType(cardType: CardType) {
@@ -79,5 +83,23 @@ class CoffeeDrinksAdapter(
                 itemView.setOnClickListener { itemClick(coffeeDrink) }
             }
         }
+    }
+}
+
+class CoffeeDrinksCallback(
+    private val oldCoffeeDrinks: List<CoffeeDrinkUiModel>,
+    private val newCoffeeDrinks: List<CoffeeDrinkUiModel>
+): DiffUtil.Callback() {
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldCoffeeDrinks[oldItemPosition].id == newCoffeeDrinks[newItemPosition].id
+    }
+
+    override fun getOldListSize(): Int = oldCoffeeDrinks.size
+
+    override fun getNewListSize(): Int = newCoffeeDrinks.size
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldCoffeeDrinks[oldItemPosition] == newCoffeeDrinks[newItemPosition]
     }
 }
